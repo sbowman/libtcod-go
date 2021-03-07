@@ -35,21 +35,11 @@ and remove those deprecation warnings.
 
 ## Installation
 
-To build the bindings, you will need the libtcod library and Go language installed.
-Please refer to http://golang.org/doc/install.html for Go installation
-and to http://doryen.eptalys.net/libtcod/download/ for libtcod installation.
-
-You can obtain libtcod-go by running `go get github.com/sbowman/tcod/tcod`,
-and use the library in your programs with `import "github.com/sbowman/tcod/tcod"`.
-
-The sample program and hmtool program can be built by running `go build` from
-within their respective directories, and then running the `./sample` and `./hmtool`
-binaries respectively. This is preferred to using `go get` or `go install` to
-install these binaries because they use data and images from their source directory
-and `go install` has no way to install these.
-
-See the `sample` application for a Makefile, with tips for building an app with Go
-and `libtcod`.  
+To build the bindings, you will need the `libtcod` library from 
+[libtcod Releases](https://github.com/libtcod/libtcod/releases).  See the `sample`
+project for an idea of how to build and run your project.  Right now, I'm building
+this on macOS, but it should work on Linux and Windows in a similar way (I'll test
+those when I get further along in the refactoring)
 
 ## Documentation
 
