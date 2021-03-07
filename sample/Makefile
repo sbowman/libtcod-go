@@ -30,7 +30,7 @@ dist: $(PROJECT)
 
 # Launch a server with TLS support
 .PHONY: run
-run: $(PROJECT)
+run: dist
 	@cd dist && ./$(PROJECT) --font=./data/fonts/terminal16x16_gs_ro.png --font.rows
 
 .PHONY: clean

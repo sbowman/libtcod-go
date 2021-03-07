@@ -54,14 +54,14 @@ func Setup() {
 }
 
 func Run() {
-	// var creditsEnd bool
+	var creditsEnd bool
 
 	// offscreen := tcod.NewConsole(SampleScreenWidth, SampleScreenHeight)
 
 	for !Root.IsWindowClosed() {
-		// if !creditsEnd {
-		// 	creditsEnd = Root.RenderCredits(56, 43, false)
-		// }
+		if !creditsEnd {
+			creditsEnd = Root.RenderCredits(50, 40, false)
+		}
 
 		Root.SetDefaultBackground(tcod.Black)
 		Root.SetDefaultForeground(tcod.Green)
