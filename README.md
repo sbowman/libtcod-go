@@ -21,7 +21,7 @@ serve as examples on how to use the library.
 
 This migration is a work in progress.  At this point, `tcod` will produce a few
 deprecation warnings, due to the fact that `libtcod-go` is using a few older 
-functions no longer supported in `libtcode`, but should build and work fine. I'm 
+functions no longer supported in `libtcod`, but should build and work fine. I'm 
 also in the process of rewriting the `sample` applicaition to bring it in line with `libtcod`'s C version,
 and remove those deprecation warnings.
 
