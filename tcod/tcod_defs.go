@@ -2,25 +2,24 @@ package tcod
 
 /*
  #include "include/libtcod.h"
- #include "include/libtcod_int.h"
 */
 import "C"
 
 /* console enums */
 const (
-	BKGND_ADD         = C.TCOD_BKGND_ADD
-	BKGND_ADDA        = C.TCOD_BKGND_ADDA
-	BKGND_ALPH        = C.TCOD_BKGND_ALPH
-	BKGND_BURN        = C.TCOD_BKGND_BURN
-	BKGND_COLOR_BURN  = C.TCOD_BKGND_COLOR_BURN
-	BKGND_COLOR_DODGE = C.TCOD_BKGND_COLOR_DODGE
-	BKGND_DARKEN      = C.TCOD_BKGND_DARKEN
-	BKGND_LIGHTEN     = C.TCOD_BKGND_LIGHTEN
-	BKGND_MULTIPLY    = C.TCOD_BKGND_MULTIPLY
-	BKGND_NONE        = C.TCOD_BKGND_NONE
-	BKGND_OVERLAY     = C.TCOD_BKGND_OVERLAY
-	BKGND_SCREEN      = C.TCOD_BKGND_SCREEN
-	BKGND_SET         = C.TCOD_BKGND_SET
+	BkgndAdd        = C.TCOD_BKGND_ADD
+	BkgndAdda       = C.TCOD_BKGND_ADDA
+	BkgndAlph       = C.TCOD_BKGND_ALPH
+	BkgndBurn       = C.TCOD_BKGND_BURN
+	BkgndColorBurn  = C.TCOD_BKGND_COLOR_BURN
+	BkgndColorDodge = C.TCOD_BKGND_COLOR_DODGE
+	BkgndDarken     = C.TCOD_BKGND_DARKEN
+	BkgndLighten    = C.TCOD_BKGND_LIGHTEN
+	BkgndMultiply   = C.TCOD_BKGND_MULTIPLY
+	BkgndNone       = C.TCOD_BKGND_NONE
+	BkgndOverlay    = C.TCOD_BKGND_OVERLAY
+	BkgndScreen     = C.TCOD_BKGND_SCREEN
+	BkgndSet        = C.TCOD_BKGND_SET
 )
 
 const (
@@ -85,100 +84,29 @@ const (
 )
 
 const (
-	FONT_LAYOUT_ASCII_INCOL = C.TCOD_FONT_LAYOUT_ASCII_INCOL
-	FONT_LAYOUT_ASCII_INROW = C.TCOD_FONT_LAYOUT_ASCII_INROW
-	FONT_LAYOUT_TCOD        = C.TCOD_FONT_LAYOUT_TCOD
-	FONT_TYPE_GREYSCALE     = C.TCOD_FONT_TYPE_GREYSCALE
-)
-
-const (
-	K_0           = C.TCODK_0
-	K_1           = C.TCODK_1
-	K_2           = C.TCODK_2
-	K_3           = C.TCODK_3
-	K_4           = C.TCODK_4
-	K_5           = C.TCODK_5
-	K_6           = C.TCODK_6
-	K_7           = C.TCODK_7
-	K_8           = C.TCODK_8
-	K_9           = C.TCODK_9
-	K_ALT         = C.TCODK_ALT
-	K_APPS        = C.TCODK_APPS
-	K_BACKSPACE   = C.TCODK_BACKSPACE
-	K_CAPSLOCK    = C.TCODK_CAPSLOCK
-	K_CHAR        = C.TCODK_CHAR
-	K_CONTROL     = C.TCODK_CONTROL
-	K_DELETE      = C.TCODK_DELETE
-	K_DOWN        = C.TCODK_DOWN
-	K_END         = C.TCODK_END
-	K_ENTER       = C.TCODK_ENTER
-	K_ESCAPE      = C.TCODK_ESCAPE
-	KEY_PRESSED   = C.TCOD_KEY_PRESSED
-	KEY_RELEASED  = C.TCOD_KEY_RELEASED
-	K_F1          = C.TCODK_F1
-	K_F10         = C.TCODK_F10
-	K_F11         = C.TCODK_F11
-	K_F12         = C.TCODK_F12
-	K_F2          = C.TCODK_F2
-	K_F3          = C.TCODK_F3
-	K_F4          = C.TCODK_F4
-	K_F5          = C.TCODK_F5
-	K_F6          = C.TCODK_F6
-	K_F7          = C.TCODK_F7
-	K_F8          = C.TCODK_F8
-	K_F9          = C.TCODK_F9
-	K_HOME        = C.TCODK_HOME
-	K_INSERT      = C.TCODK_INSERT
-	K_KP0         = C.TCODK_KP0
-	K_KP1         = C.TCODK_KP1
-	K_KP2         = C.TCODK_KP2
-	K_KP3         = C.TCODK_KP3
-	K_KP4         = C.TCODK_KP4
-	K_KP5         = C.TCODK_KP5
-	K_KP6         = C.TCODK_KP6
-	K_KP7         = C.TCODK_KP7
-	K_KP8         = C.TCODK_KP8
-	K_KP9         = C.TCODK_KP9
-	K_KPADD       = C.TCODK_KPADD
-	K_KPDEC       = C.TCODK_KPDEC
-	K_KPDIV       = C.TCODK_KPDIV
-	K_KPENTER     = C.TCODK_KPENTER
-	K_KPMUL       = C.TCODK_KPMUL
-	K_KPSUB       = C.TCODK_KPSUB
-	K_LEFT        = C.TCODK_LEFT
-	K_LWIN        = C.TCODK_LWIN
-	K_NONE        = C.TCODK_NONE
-	K_NUMLOCK     = C.TCODK_NUMLOCK
-	K_PAGEDOWN    = C.TCODK_PAGEDOWN
-	K_PAGEUP      = C.TCODK_PAGEUP
-	K_PAUSE       = C.TCODK_PAUSE
-	K_PRINTSCREEN = C.TCODK_PRINTSCREEN
-	K_RIGHT       = C.TCODK_RIGHT
-	K_RWIN        = C.TCODK_RWIN
-	K_SCROLLLOCK  = C.TCODK_SCROLLLOCK
-	K_SHIFT       = C.TCODK_SHIFT
-	K_SPACE       = C.TCODK_SPACE
-	K_TAB         = C.TCODK_TAB
-	K_UP          = C.TCODK_UP
+	FontLayoutASCIIInCol = C.TCOD_FONT_LAYOUT_ASCII_INCOL
+	FontLayoutASCIIInRow = C.TCOD_FONT_LAYOUT_ASCII_INROW
+	FontLayoutTCOD       = C.TCOD_FONT_LAYOUT_TCOD
+	FontTypeGreyscale    = C.TCOD_FONT_TYPE_GREYSCALE
 )
 
 /* fov enums */
 
 const (
-	FOV_BASIC         = C.FOV_BASIC
-	FOV_DIAMOND       = C.FOV_DIAMOND
-	FOV_SHADOW        = C.FOV_SHADOW
-	FOV_PERMISSIVE_0  = C.FOV_PERMISSIVE_0
-	FOV_PERMISSIVE_1  = C.FOV_PERMISSIVE_1
-	FOV_PERMISSIVE_2  = C.FOV_PERMISSIVE_2
-	FOV_PERMISSIVE_3  = C.FOV_PERMISSIVE_3
-	FOV_PERMISSIVE_4  = C.FOV_PERMISSIVE_4
-	FOV_PERMISSIVE_5  = C.FOV_PERMISSIVE_5
-	FOV_PERMISSIVE_6  = C.FOV_PERMISSIVE_6
-	FOV_PERMISSIVE_7  = C.FOV_PERMISSIVE_7
-	FOV_PERMISSIVE_8  = C.FOV_PERMISSIVE_8
-	FOV_RESTRICTIVE   = C.FOV_RESTRICTIVE
-	NB_FOV_ALGORITHMS = C.NB_FOV_ALGORITHMS
+	FOVBasic        = C.FOV_BASIC
+	FOVDiamond      = C.FOV_DIAMOND
+	FOVShadow       = C.FOV_SHADOW
+	FOVPermissive0  = C.FOV_PERMISSIVE_0
+	FOVPermissive1  = C.FOV_PERMISSIVE_1
+	FOVPermissive2  = C.FOV_PERMISSIVE_2
+	FOVPermissive3  = C.FOV_PERMISSIVE_3
+	FOVPermissive4  = C.FOV_PERMISSIVE_4
+	FOVPermissive5  = C.FOV_PERMISSIVE_5
+	FOVPermissive6  = C.FOV_PERMISSIVE_6
+	FOVPermissive7  = C.FOV_PERMISSIVE_7
+	FOVPermissive8  = C.FOV_PERMISSIVE_8
+	FOVRestrictive  = C.FOV_RESTRICTIVE
+	NbFOVAlgorithms = C.NB_FOV_ALGORITHMS
 )
 
 /* random enums */
@@ -243,24 +171,41 @@ const (
 
 /* renderer enum */
 const (
-	RENDERER_GLSL   = C.TCOD_RENDERER_GLSL
-	RENDERER_OPENGL = C.TCOD_RENDERER_OPENGL
-	RENDERER_SDL    = C.TCOD_RENDERER_SDL
-	NB_RENDERERS    = C.TCOD_NB_RENDERERS
+	GLSL        = C.TCOD_RENDERER_GLSL
+	OpenGL      = C.TCOD_RENDERER_OPENGL
+	SDL         = C.TCOD_RENDERER_SDL
+	SDL2        = C.TCOD_RENDERER_SDL2
+	OpenGL2     = C.TCOD_RENDERER_OPENGL2
+	NBRenderers = C.TCOD_NB_RENDERERS
 )
 
 /* alignment enum */
 const (
-	LEFT   = C.TCOD_LEFT
-	RIGHT  = C.TCOD_RIGHT
-	CENTER = C.TCOD_CENTER
+	Left   = C.TCOD_LEFT
+	Right  = C.TCOD_RIGHT
+	Center = C.TCOD_CENTER
 )
 
 /* distribution for mersenne */
 const (
-	DISTRIBUTION_LINEAR                 = C.TCOD_DISTRIBUTION_LINEAR
-	DISTRIBUTION_GAUSSIAN               = C.TCOD_DISTRIBUTION_GAUSSIAN
-	DISTRIBUTION_GAUSSIAN_RANGE         = C.TCOD_DISTRIBUTION_GAUSSIAN_RANGE
-	DISTRIBUTION_GAUSSIAN_INVERSE       = C.TCOD_DISTRIBUTION_GAUSSIAN_INVERSE
-	DISTRIBUTION_GAUSSIAN_RANGE_INVERSE = C.TCOD_DISTRIBUTION_GAUSSIAN_RANGE_INVERSE
+	DistributionLinear               = C.TCOD_DISTRIBUTION_LINEAR
+	DistributionGaussian             = C.TCOD_DISTRIBUTION_GAUSSIAN
+	DistributionGaussianRange        = C.TCOD_DISTRIBUTION_GAUSSIAN_RANGE
+	DistributionGaussianInverse      = C.TCOD_DISTRIBUTION_GAUSSIAN_INVERSE
+	DistributionGaussianRangeInverse = C.TCOD_DISTRIBUTION_GAUSSIAN_RANGE_INVERSE
+)
+
+const (
+	EventKeyPress      = 1
+	EventKeyRelease    = 2
+	EventKey           = 3
+	EventMouseMove     = 4
+	EventMousePress    = 8
+	EventMouseRelease  = 16
+	EventMouse         = 28
+	EventFingerMove    = 32
+	EventFingerPress   = 64
+	EventFingerRelease = 128
+	EventFinger        = 224
+	EventAny           = 255
 )

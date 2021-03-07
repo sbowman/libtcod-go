@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/sbowman/tcod/tcod/keys"
 )
 
 //
@@ -136,28 +138,28 @@ func NewGui(console IConsole) *Gui {
 		rbs:          NewRadioButtonStatic()}
 }
 
-func (self *Gui) Register(w IWidget) {
-	w.SetGui(self)
-	self.widgetVector = append(self.widgetVector, w)
+func (gui *Gui) Register(w IWidget) {
+	w.SetGui(gui)
+	gui.widgetVector = append(gui.widgetVector, w)
 }
 
-func (self *Gui) Unregister(w IWidget) {
-	if self.focus == w {
-		self.focus = nil
+func (gui *Gui) Unregister(w IWidget) {
+	if gui.focus == w {
+		gui.focus = nil
 	}
-	if self.keyboardFocus == w {
-		self.keyboardFocus = nil
+	if gui.keyboardFocus == w {
+		gui.keyboardFocus = nil
 	}
-	for i, e := range self.widgetVector {
+	for i, e := range gui.widgetVector {
 		if e == w {
-			self.widgetVector = append(self.widgetVector[0:i], self.widgetVector[i+1:]...)
+			gui.widgetVector = append(gui.widgetVector[0:i], gui.widgetVector[i+1:]...)
 		}
 	}
 }
 
-func (self *Gui) updateWidgetsIntern(k Key) {
-	self.elapsed = SysGetLastFrameLength()
-	for _, w := range self.widgetVector {
+func (gui *Gui) updateWidgetsIntern(k Key) {
+	gui.elapsed = SysGetLastFrameLength()
+	for _, w := range gui.widgetVector {
 		if w.IsVisible() {
 			w.ComputeSize()
 			w.Update(w, k)
@@ -165,48 +167,48 @@ func (self *Gui) updateWidgetsIntern(k Key) {
 	}
 }
 
-func (self *Gui) SetConsole(console IConsole) {
-	self.con = console
+func (gui *Gui) SetConsole(console IConsole) {
+	gui.con = console
 }
 
-func (self *Gui) UpdateWidgets(k Key) {
-	self.mouse = MouseGetStatus()
-	self.updateWidgetsIntern(k)
+func (gui *Gui) UpdateWidgets(k Key) {
+	gui.mouse = MouseGetStatus()
+	gui.updateWidgetsIntern(k)
 }
 
-func (self *Gui) RenderWidgets() {
-	for _, w := range self.widgetVector {
+func (gui *Gui) RenderWidgets() {
+	for _, w := range gui.widgetVector {
 		if w.IsVisible() {
-			fore, back := self.con.GetDefaultForeground(), self.con.GetDefaultBackground()
+			fore, back := gui.con.GetDefaultForeground(), gui.con.GetDefaultBackground()
 			w.Render(w)
-			self.con.SetDefaultForeground(fore)
-			self.con.SetDefaultBackground(back)
+			gui.con.SetDefaultForeground(fore)
+			gui.con.SetDefaultBackground(back)
 		}
 	}
 }
 
-func (self *Gui) IsFocused(w IWidget) bool {
-	return self.focus == w
+func (gui *Gui) IsFocused(w IWidget) bool {
+	return gui.focus == w
 }
 
-func (self *Gui) IsKeyboardFocused(w IWidget) bool {
-	return self.keyboardFocus == w
+func (gui *Gui) IsKeyboardFocused(w IWidget) bool {
+	return gui.keyboardFocus == w
 }
 
-func (self *Gui) GetFocusedWidget() IWidget {
-	return self.focus
+func (gui *Gui) GetFocusedWidget() IWidget {
+	return gui.focus
 }
 
-func (self *Gui) GetFocusedKeyboardWidget() IWidget {
-	return self.keyboardFocus
+func (gui *Gui) GetFocusedKeyboardWidget() IWidget {
+	return gui.keyboardFocus
 }
 
-func (self *Gui) UnSelectRadioGroup(group int) {
-	self.rbs.UnSelectGroup(group)
+func (gui *Gui) UnSelectRadioGroup(group int) {
+	gui.rbs.UnSelectGroup(group)
 }
 
-func (self *Gui) SetDefaultRadioGroup(group int) {
-	self.rbs.SetDefaultGroup(group)
+func (gui *Gui) SetDefaultRadioGroup(group int) {
+	gui.rbs.SetDefaultGroup(group)
 }
 
 //
@@ -229,28 +231,28 @@ type Widget struct {
 
 type WidgetCallback func(w IWidget, userData interface{})
 
-func (self *Gui) newWidget() *Widget {
+func (gui *Gui) newWidget() *Widget {
 	result := &Widget{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewWidget() *Widget {
-	result := self.newWidget()
+func (gui *Gui) NewWidget() *Widget {
+	result := gui.newWidget()
 	result.initializeWidget(0, 0, 0, 0)
 	return result
 }
 
 //
 
-func (self *Gui) NewWidgetAt(x, y int) *Widget {
-	result := self.newWidget()
+func (gui *Gui) NewWidgetAt(x, y int) *Widget {
+	result := gui.newWidget()
 	result.initializeWidget(x, y, 0, 0)
 	return result
 }
 
-func (self *Gui) NewWidgetDim(x, y, w, h int) *Widget {
-	result := self.newWidget()
+func (gui *Gui) NewWidgetDim(x, y, w, h int) *Widget {
+	result := gui.newWidget()
 	result.initializeWidget(x, y, w, h)
 	return result
 }
@@ -477,20 +479,20 @@ type Button struct {
 	callback WidgetCallback
 }
 
-func (self *Gui) newButton() *Button {
+func (gui *Gui) newButton() *Button {
 	result := &Button{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewButton(label string, tip string, callback WidgetCallback, userData interface{}) *Button {
-	result := self.newButton()
+func (gui *Gui) NewButton(label string, tip string, callback WidgetCallback, userData interface{}) *Button {
+	result := gui.newButton()
 	result.initializeButton(0, 0, 0, 0, label, tip, callback, userData)
 	return result
 }
 
-func (self *Gui) NewButtonDim(x, y, width, height int, label string, tip string, callback WidgetCallback, userData interface{}) *Button {
-	result := self.newButton()
+func (gui *Gui) NewButtonDim(x, y, width, height int, label string, tip string, callback WidgetCallback, userData interface{}) *Button {
+	result := gui.newButton()
 	result.initializeButton(x, y, width, height, label, tip, callback, userData)
 	return result
 }
@@ -525,17 +527,17 @@ func (self *Button) Render(iself IWidget) {
 	fore, back := iself.GetCurrentColors()
 	con.SetDefaultForeground(fore)
 	con.SetDefaultBackground(back)
-	con.PrintEx(self.x+self.w/2, self.y, BKGND_NONE, CENTER, self.label)
+	con.PrintEx(self.x+self.w/2, self.y, BkgndNone, Center, self.label)
 	if self.w > 0 && self.h > 0 {
-		con.Rect(self.x, self.y, self.w, self.h, true, BKGND_SET)
+		con.Rect(self.x, self.y, self.w, self.h, true, BkgndSet)
 	}
 	if self.label != "" {
 		if self.pressed && self.mouseIn {
 			//con.PrintCenter(self.x+self.w/2, self.y, BKGND_NONE, "-%s-", self.label)
-			con.PrintEx(self.x+self.w/2, self.y, BKGND_NONE, CENTER, "%s", self.label)
+			con.PrintEx(self.x+self.w/2, self.y, BkgndNone, Center, "%s", self.label)
 			//con.PrintLeft(self.x + 1, self.y, BKGND_NONE, self.label)
 		} else {
-			con.PrintEx(self.x+self.w/2, self.y, BKGND_NONE, CENTER, self.label)
+			con.PrintEx(self.x+self.w/2, self.y, BkgndNone, Center, self.label)
 			//con.PrintLeft(self.x + 1, self.y, BKGND_NONE, self.label)
 		}
 	}
@@ -569,20 +571,20 @@ type StatusBar struct {
 	Widget
 }
 
-func (self *Gui) newStatusBar() *StatusBar {
+func (gui *Gui) newStatusBar() *StatusBar {
 	result := &StatusBar{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewStatusBar() *StatusBar {
-	result := self.newStatusBar()
+func (gui *Gui) NewStatusBar() *StatusBar {
+	result := gui.newStatusBar()
 	result.initializeStatusBar(0, 0, 0, 0)
 	return result
 }
 
-func (self *Gui) NewStatusBarDim(x, y, w, h int) *StatusBar {
-	result := self.newStatusBar()
+func (gui *Gui) NewStatusBarDim(x, y, w, h int) *StatusBar {
+	result := gui.newStatusBar()
 	result.initializeStatusBar(x, y, w, h)
 	return result
 
@@ -596,10 +598,10 @@ func (self *StatusBar) Render(iself IWidget) {
 	con := self.gui.con
 	focus := self.gui.focus
 	con.SetDefaultBackground(self.back)
-	con.Rect(self.x, self.y, self.w, self.h, true, BKGND_SET)
+	con.Rect(self.x, self.y, self.w, self.h, true, BkgndSet)
 	if focus != nil && focus.GetTip() != "" {
 		con.SetDefaultForeground(self.fore)
-		con.PrintRectEx(self.x+1, self.y, self.w, self.h, BKGND_NONE, LEFT, focus.GetTip())
+		con.PrintRectEx(self.x+1, self.y, self.w, self.h, BkgndNone, Left, focus.GetTip())
 	}
 }
 
@@ -615,20 +617,20 @@ type ImageWidget struct {
 	back Color
 }
 
-func (self *Gui) newImageWidget() *ImageWidget {
+func (gui *Gui) newImageWidget() *ImageWidget {
 	result := &ImageWidget{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewImageWidget(x, y, w, h int) *ImageWidget {
-	result := self.newImageWidget()
+func (gui *Gui) NewImageWidget(x, y, w, h int) *ImageWidget {
+	result := gui.newImageWidget()
 	result.initializeImageWidget(x, y, w, h, "")
 	return result
 }
 
-func (self *Gui) NewImageWidgetWithTip(x, y, w, h int, tip string) *ImageWidget {
-	result := self.newImageWidget()
+func (gui *Gui) NewImageWidgetWithTip(x, y, w, h int, tip string) *ImageWidget {
+	result := gui.newImageWidget()
 	result.initializeImageWidget(x, y, w, h, tip)
 	return result
 }
@@ -636,7 +638,7 @@ func (self *Gui) NewImageWidgetWithTip(x, y, w, h int, tip string) *ImageWidget 
 func (self *ImageWidget) initializeImageWidget(x, y, w, h int, tip string) {
 	self.Widget.initializeWidget(x, y, w, h)
 	self.tip = tip
-	self.back = COLOR_BLACK
+	self.back = Black
 }
 
 func (self *ImageWidget) Render(iself IWidget) {
@@ -644,7 +646,7 @@ func (self *ImageWidget) Render(iself IWidget) {
 	fore, back := self.GetCurrentColors()
 	con.SetDefaultForeground(fore)
 	con.SetDefaultBackground(back)
-	con.Rect(self.x, self.y, self.w, self.h, true, BKGND_SET)
+	con.Rect(self.x, self.y, self.w, self.h, true, BkgndSet)
 
 }
 
@@ -669,14 +671,14 @@ type Container struct {
 	content []IWidget
 }
 
-func (self *Gui) newContainer() *Container {
+func (gui *Gui) newContainer() *Container {
 	result := &Container{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewContainer(x, y, w, h int) *Container {
-	result := self.newContainer()
+func (gui *Gui) NewContainer(x, y, w, h int) *Container {
+	result := gui.newContainer()
 	result.initializeContainer(x, y, w, h)
 	return result
 }
@@ -730,14 +732,14 @@ type VBox struct {
 	padding int
 }
 
-func (self *Gui) newVBox() *VBox {
+func (gui *Gui) newVBox() *VBox {
 	result := &VBox{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewVBox(x, y, padding int) *VBox {
-	result := self.newVBox()
+func (gui *Gui) NewVBox(x, y, padding int) *VBox {
+	result := gui.newVBox()
 	result.initializeVBox(x, y, padding)
 	return result
 
@@ -780,14 +782,14 @@ type HBox struct {
 	VBox
 }
 
-func (self *Gui) newHBox() *HBox {
+func (gui *Gui) newHBox() *HBox {
 	result := &HBox{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewHBox(x, y, padding int) *HBox {
-	result := self.newHBox()
+func (gui *Gui) NewHBox(x, y, padding int) *HBox {
+	result := gui.newHBox()
 	result.initializeHBox(x, y, padding)
 	return result
 }
@@ -833,20 +835,20 @@ type Separator struct {
 	txt string
 }
 
-func (self *Gui) newSeparator() *Separator {
+func (gui *Gui) newSeparator() *Separator {
 	result := &Separator{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewSeparator(txt string) *Separator {
-	result := self.newSeparator()
+func (gui *Gui) NewSeparator(txt string) *Separator {
+	result := gui.newSeparator()
 	result.initializeSeparator(txt, "")
 	return result
 }
 
-func (self *Gui) NewSeparatorWithTip(txt, tip string) *Separator {
-	result := self.newSeparator()
+func (gui *Gui) NewSeparatorWithTip(txt, tip string) *Separator {
+	result := gui.newSeparator()
 	result.initializeSeparator(txt, tip)
 	return result
 
@@ -872,12 +874,12 @@ func (self *Separator) Render(iself IWidget) {
 	con := self.gui.con
 	con.SetDefaultBackground(self.back)
 	con.SetDefaultForeground(self.fore)
-	con.Hline(self.x, self.y, self.w, BKGND_SET)
+	con.Hline(self.x, self.y, self.w, BkgndSet)
 	con.SetChar(self.x-1, self.y, CHAR_TEEE)
 	con.SetChar(self.x+self.w, self.y, CHAR_TEEW)
 	con.SetDefaultBackground(self.fore)
 	con.SetDefaultForeground(self.back)
-	con.PrintEx(self.x+self.w/2, self.y, BKGND_SET, CENTER, " %s ", self.txt)
+	con.PrintEx(self.x+self.w/2, self.y, BkgndSet, Center, " %s ", self.txt)
 }
 
 type ToolBar struct {
@@ -887,21 +889,21 @@ type ToolBar struct {
 	shouldPrintFrame bool
 }
 
-func (self *Gui) newToolBar() *ToolBar {
+func (gui *Gui) newToolBar() *ToolBar {
 	result := &ToolBar{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewToolBarWithWidth(x, y, w int, name, tip string) *ToolBar {
-	result := self.newToolBar()
+func (gui *Gui) NewToolBarWithWidth(x, y, w int, name, tip string) *ToolBar {
+	result := gui.newToolBar()
 	result.initializeToolBar(x, y, w, name, tip)
 	return result
 
 }
 
-func (self *Gui) NewToolBar(x, y int, name, tip string) *ToolBar {
-	result := self.newToolBar()
+func (gui *Gui) NewToolBar(x, y int, name, tip string) *ToolBar {
+	result := gui.newToolBar()
 	result.initializeToolBar(x, y, 0, name, tip)
 	return result
 
@@ -936,7 +938,7 @@ func (self *ToolBar) Render(iself IWidget) {
 	con.SetDefaultForeground(fore)
 	con.SetDefaultBackground(back)
 	if self.shouldPrintFrame {
-		con.PrintFrame(self.x, self.y, self.w, self.h, true, BKGND_SET, self.name)
+		con.PrintFrame(self.x, self.y, self.w, self.h, true, BkgndSet, self.name)
 	}
 	self.Container.Render(iself)
 }
@@ -989,20 +991,20 @@ type ToggleButton struct {
 	pressed bool
 }
 
-func (self *Gui) newToggleButton() *ToggleButton {
+func (gui *Gui) newToggleButton() *ToggleButton {
 	result := &ToggleButton{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewToggleButton(label, tip string, callback WidgetCallback, userData interface{}) *ToggleButton {
-	result := self.newToggleButton()
+func (gui *Gui) NewToggleButton(label, tip string, callback WidgetCallback, userData interface{}) *ToggleButton {
+	result := gui.newToggleButton()
 	result.initializeToggleButton(0, 0, 0, 0, label, tip, callback, userData)
 	return result
 }
 
-func (self *Gui) NewToggleButtonWithTip(x, y, width, height int, label, tip string, callback WidgetCallback, userData interface{}) *ToggleButton {
-	result := self.newToggleButton()
+func (gui *Gui) NewToggleButtonWithTip(x, y, width, height int, label, tip string, callback WidgetCallback, userData interface{}) *ToggleButton {
+	result := gui.newToggleButton()
 	result.initializeToggleButton(x, y, width, height, label, tip, callback, userData)
 	return result
 }
@@ -1032,12 +1034,12 @@ func (self *ToggleButton) Render(iself IWidget) {
 	fore, back := iself.GetCurrentColors()
 	con.SetDefaultBackground(back)
 	con.SetDefaultForeground(fore)
-	con.Rect(self.x, self.y, self.w, self.h, true, BKGND_SET)
+	con.Rect(self.x, self.y, self.w, self.h, true, BkgndSet)
 	if self.label != "" {
-		con.PrintEx(self.x, self.y, BKGND_NONE, LEFT, "%c %s",
+		con.PrintEx(self.x, self.y, BkgndNone, Left, "%c %s",
 			If(self.pressed, CHAR_CHECKBOX_SET, CHAR_CHECKBOX_UNSET).(int), self.label)
 	} else {
-		con.PrintEx(self.x, self.y, BKGND_NONE, LEFT, "%c",
+		con.PrintEx(self.x, self.y, BkgndNone, Left, "%c",
 			If(self.pressed, CHAR_CHECKBOX_SET, CHAR_CHECKBOX_UNSET).(int), self.label)
 	}
 }
@@ -1052,20 +1054,20 @@ type Label struct {
 	label string
 }
 
-func (self *Gui) newLabel() *Label {
+func (gui *Gui) newLabel() *Label {
 	result := &Label{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewLabel(x, y int, label string) *Label {
-	result := self.newLabel()
+func (gui *Gui) NewLabel(x, y int, label string) *Label {
+	result := gui.newLabel()
 	result.initializeLabel(x, y, label, "")
 	return result
 }
 
-func (self *Gui) NewLabelWithTip(x, y int, label string, tip string) *Label {
-	result := self.newLabel()
+func (gui *Gui) NewLabelWithTip(x, y int, label string, tip string) *Label {
+	result := gui.newLabel()
 	result.initializeLabel(x, y, label, tip)
 	return result
 }
@@ -1082,7 +1084,7 @@ func (self *Label) Render(iself IWidget) {
 	con := self.gui.con
 	con.SetDefaultBackground(self.back)
 	con.SetDefaultForeground(self.fore)
-	con.PrintEx(self.x, self.y, BKGND_NONE, LEFT, self.label)
+	con.PrintEx(self.x, self.y, BkgndNone, Left, self.label)
 }
 
 func (self *Label) ComputeSize() {
@@ -1127,189 +1129,189 @@ type TextBox struct {
 	data             interface{}
 }
 
-func (self *Gui) newTextBox() *TextBox {
+func (gui *Gui) newTextBox() *TextBox {
 	result := &TextBox{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewTextBox(x, y, w, maxw int, label, value string) *TextBox {
-	result := self.newTextBox()
+func (gui *Gui) NewTextBox(x, y, w, maxw int, label, value string) *TextBox {
+	result := gui.newTextBox()
 	result.initializeTextBox(x, y, w, maxw, label, value, "")
 	return result
 }
 
-func (self *Gui) NewTextBoxWithTip(x, y, w, maxw int, label, value, tip string) *TextBox {
-	result := self.newTextBox()
+func (gui *Gui) NewTextBoxWithTip(x, y, w, maxw int, label, value, tip string) *TextBox {
+	result := gui.newTextBox()
 	result.initializeTextBox(x, y, w, maxw, label, value, tip)
 	return result
 }
 
-func (self *TextBox) initializeTextBox(x, y, w, maxw int, label, value, tip string) {
-	self.Widget.initializeWidget(x, y, w, 0)
-	self.x = x
-	self.y = y
-	self.w = w
-	self.h = 1
-	self.maxw = maxw
-	self.label = label
+func (textbox *TextBox) initializeTextBox(x, y, w, maxw int, label, value, tip string) {
+	textbox.Widget.initializeWidget(x, y, w, 0)
+	textbox.x = x
+	textbox.y = y
+	textbox.w = w
+	textbox.h = 1
+	textbox.maxw = maxw
+	textbox.label = label
 	if len(value) > maxw {
-		self.txt = value[0:maxw]
+		textbox.txt = value[0:maxw]
 	} else {
-		self.txt = value
+		textbox.txt = value
 	}
-	self.tip = tip
-	self.boxw = w
+	textbox.tip = tip
+	textbox.boxw = w
 	if label != "" {
-		self.boxx = len(label) + 1
-		self.w += self.boxx
+		textbox.boxx = len(label) + 1
+		textbox.w += textbox.boxx
 	}
 }
 
-func (self *TextBox) Render(iself IWidget) {
+func (textbox *TextBox) Render(iself IWidget) {
 	// save colors
-	con := self.gui.con
-	g := self.gui
+	con := textbox.gui.con
+	g := textbox.gui
 
-	con.SetDefaultBackground(self.back)
-	con.SetDefaultForeground(self.fore)
-	con.Rect(self.x, self.y, self.w, self.h, true, BKGND_SET)
-	if self.label != "" {
-		con.PrintEx(self.x, self.y, BKGND_NONE, LEFT, self.label)
+	con.SetDefaultBackground(textbox.back)
+	con.SetDefaultForeground(textbox.fore)
+	con.Rect(textbox.x, textbox.y, textbox.w, textbox.h, true, BkgndSet)
+	if textbox.label != "" {
+		con.PrintEx(textbox.x, textbox.y, BkgndNone, Left, textbox.label)
 	}
 
-	con.SetDefaultBackground(If(g.IsKeyboardFocused(self), self.foreFocus, self.fore).(Color))
-	con.SetDefaultForeground(If(g.IsKeyboardFocused(self), self.backFocus, self.back).(Color))
-	con.Rect(self.x+self.boxx, self.y, self.boxw, self.h, false, BKGND_SET)
-	length := len(self.txt) - self.offset
-	if length > self.boxw {
-		length = self.boxw
+	con.SetDefaultBackground(If(g.IsKeyboardFocused(textbox), textbox.foreFocus, textbox.fore).(Color))
+	con.SetDefaultForeground(If(g.IsKeyboardFocused(textbox), textbox.backFocus, textbox.back).(Color))
+	con.Rect(textbox.x+textbox.boxx, textbox.y, textbox.boxw, textbox.h, false, BkgndSet)
+	length := len(textbox.txt) - textbox.offset
+	if length > textbox.boxw {
+		length = textbox.boxw
 	}
-	if self.txt != "" {
-		con.PrintEx(self.x+self.boxx, self.y, BKGND_NONE, LEFT, padRight(self.txt[self.offset:], length, ' '))
+	if textbox.txt != "" {
+		con.PrintEx(textbox.x+textbox.boxx, textbox.y, BkgndNone, Left, padRight(textbox.txt[textbox.offset:], length, ' '))
 
 	}
-	if g.IsKeyboardFocused(self) && self.blink > 0.0 {
-		if self.insert {
-			con.SetCharBackground(self.x+self.boxx+self.pos-self.offset, self.y, self.fore, BKGND_SET)
-			con.SetCharForeground(self.x+self.boxx+self.pos-self.offset, self.y, self.back)
+	if g.IsKeyboardFocused(textbox) && textbox.blink > 0.0 {
+		if textbox.insert {
+			con.SetCharBackground(textbox.x+textbox.boxx+textbox.pos-textbox.offset, textbox.y, textbox.fore, BkgndSet)
+			con.SetCharForeground(textbox.x+textbox.boxx+textbox.pos-textbox.offset, textbox.y, textbox.back)
 		} else {
-			con.SetCharBackground(self.x+self.boxx+self.pos-self.offset, self.y, self.back, BKGND_SET)
-			con.SetCharForeground(self.x+self.boxx+self.pos-self.offset, self.y, self.fore)
+			con.SetCharBackground(textbox.x+textbox.boxx+textbox.pos-textbox.offset, textbox.y, textbox.back, BkgndSet)
+			con.SetCharForeground(textbox.x+textbox.boxx+textbox.pos-textbox.offset, textbox.y, textbox.fore)
 		}
 	}
 }
 
-func (self *TextBox) Update(iself IWidget, k Key) {
-	g := self.gui
-	tbs := self.gui.tbs
-	if g.keyboardFocus == IWidget(self) {
-		self.blink -= g.elapsed
-		if self.blink < -tbs.blinkingDelay {
-			self.blink += 2 * tbs.blinkingDelay
+func (textbox *TextBox) Update(iself IWidget, k Key) {
+	g := textbox.gui
+	tbs := textbox.gui.tbs
+	if g.keyboardFocus == IWidget(textbox) {
+		textbox.blink -= g.elapsed
+		if textbox.blink < -tbs.blinkingDelay {
+			textbox.blink += 2 * tbs.blinkingDelay
 		}
-		if k.Vk == K_SPACE || k.Vk == K_CHAR ||
-			(k.Vk >= K_0 && k.Vk <= K_9) ||
-			(k.Vk >= K_KP0 && k.Vk <= K_KP9) {
-			if !self.insert || len(self.txt) < self.maxw {
-				if self.insert && self.pos < len(self.txt) {
-					self.txt = insert(self.txt, int(k.C), self.pos)
+		if k.VK == keys.Space || k.VK == keys.Char ||
+			(k.VK >= keys.Zero && k.VK <= keys.Nine) ||
+			(k.VK >= keys.KP0 && k.VK <= keys.KP9) {
+			if !textbox.insert || len(textbox.txt) < textbox.maxw {
+				if textbox.insert && textbox.pos < len(textbox.txt) {
+					textbox.txt = insert(textbox.txt, int(k.C), textbox.pos)
 				} else {
-					self.txt = replace(self.txt, int(k.C), self.pos)
+					textbox.txt = replace(textbox.txt, int(k.C), textbox.pos)
 				}
-				if self.pos < self.maxw {
-					self.pos++
+				if textbox.pos < textbox.maxw {
+					textbox.pos++
 				}
-				if self.pos >= self.boxw {
-					self.offset = self.pos - self.boxw + 1
+				if textbox.pos >= textbox.boxw {
+					textbox.offset = textbox.pos - textbox.boxw + 1
 				}
-				if self.callback != nil {
-					self.callback(self, self.txt, self.data)
+				if textbox.callback != nil {
+					textbox.callback(textbox, textbox.txt, textbox.data)
 				}
 			}
-			self.blink = tbs.blinkingDelay
+			textbox.blink = tbs.blinkingDelay
 		}
-		switch k.Vk {
-		case K_LEFT:
-			if self.pos > 0 {
-				self.pos--
+		switch k.VK {
+		case keys.Left:
+			if textbox.pos > 0 {
+				textbox.pos--
 			}
-			if self.pos < self.offset {
-				self.offset = self.pos
+			if textbox.pos < textbox.offset {
+				textbox.offset = textbox.pos
 			}
-			self.blink = tbs.blinkingDelay
-		case K_RIGHT:
-			if self.pos < len(self.txt) {
-				self.pos++
+			textbox.blink = tbs.blinkingDelay
+		case keys.Right:
+			if textbox.pos < len(textbox.txt) {
+				textbox.pos++
 			}
-			if self.pos >= self.boxw {
-				self.offset = self.pos - self.boxw + 1
+			if textbox.pos >= textbox.boxw {
+				textbox.offset = textbox.pos - textbox.boxw + 1
 			}
-			self.blink = tbs.blinkingDelay
-		case K_HOME:
-			self.pos, self.offset = 0, 0
-			self.blink = tbs.blinkingDelay
-		case K_BACKSPACE:
-			if self.pos > 0 {
-				self.pos--
-				self.txt = delete(self.txt, self.pos)
-				if self.callback != nil {
-					self.callback(self, self.txt, self.data)
+			textbox.blink = tbs.blinkingDelay
+		case keys.Home:
+			textbox.pos, textbox.offset = 0, 0
+			textbox.blink = tbs.blinkingDelay
+		case keys.Backspace:
+			if textbox.pos > 0 {
+				textbox.pos--
+				textbox.txt = delete(textbox.txt, textbox.pos)
+				if textbox.callback != nil {
+					textbox.callback(textbox, textbox.txt, textbox.data)
 				}
-				if self.pos < self.offset {
-					self.offset = self.pos
-				}
-			}
-			self.blink = tbs.blinkingDelay
-		case K_DELETE:
-			if self.pos < len(self.txt) {
-				self.txt = delete(self.txt, self.pos)
-				if self.callback != nil {
-					self.callback(self, self.txt, self.data)
+				if textbox.pos < textbox.offset {
+					textbox.offset = textbox.pos
 				}
 			}
-			self.blink = tbs.blinkingDelay
-		case K_END:
-			self.pos = len(self.txt)
-			if self.pos >= self.boxw {
-				self.offset = self.pos - self.boxw + 1
+			textbox.blink = tbs.blinkingDelay
+		case keys.Delete:
+			if textbox.pos < len(textbox.txt) {
+				textbox.txt = delete(textbox.txt, textbox.pos)
+				if textbox.callback != nil {
+					textbox.callback(textbox, textbox.txt, textbox.data)
+				}
 			}
-			self.blink = tbs.blinkingDelay
+			textbox.blink = tbs.blinkingDelay
+		case keys.End:
+			textbox.pos = len(textbox.txt)
+			if textbox.pos >= textbox.boxw {
+				textbox.offset = textbox.pos - textbox.boxw + 1
+			}
+			textbox.blink = tbs.blinkingDelay
 		default:
 		}
 	}
-	self.Widget.Update(iself, k)
+	textbox.Widget.Update(iself, k)
 }
 
-func (self *TextBox) SetBlinkingDelay(delay float32) {
-	self.gui.tbs.blinkingDelay = delay
+func (textbox *TextBox) SetBlinkingDelay(delay float32) {
+	textbox.gui.tbs.blinkingDelay = delay
 }
 
-func (self *TextBox) GetBlinkingDelay() float32 {
-	return self.gui.tbs.blinkingDelay
+func (textbox *TextBox) GetBlinkingDelay() float32 {
+	return textbox.gui.tbs.blinkingDelay
 }
 
-func (self *TextBox) SetText(txt string) {
-	if self.maxw < len(txt) {
-		self.txt = txt[0:self.maxw]
+func (textbox *TextBox) SetText(txt string) {
+	if textbox.maxw < len(txt) {
+		textbox.txt = txt[0:textbox.maxw]
 	} else {
-		self.txt = txt
+		textbox.txt = txt
 	}
 }
 
-func (self *TextBox) GetText() string {
-	return self.txt
+func (textbox *TextBox) GetText() string {
+	return textbox.txt
 }
 
-func (self *TextBox) SetCallback(callback TextBoxCallback, data interface{}) {
-	self.callback = callback
-	self.data = data
+func (textbox *TextBox) SetCallback(callback TextBoxCallback, data interface{}) {
+	textbox.callback = callback
+	textbox.data = data
 }
 
-func (self *TextBox) onButtonClick() {
-	g := self.gui
-	if g.mouse.Cx >= self.x+self.boxx && g.mouse.Cx < self.x+self.boxx+self.boxw {
-		g.keyboardFocus = self
+func (textbox *TextBox) onButtonClick() {
+	g := textbox.gui
+	if g.mouse.Cx >= textbox.x+textbox.boxx && g.mouse.Cx < textbox.x+textbox.boxx+textbox.boxw {
+		g.keyboardFocus = textbox
 	}
 }
 
@@ -1346,20 +1348,20 @@ type RadioButton struct {
 	group                        int
 }
 
-func (self *Gui) newRadioButton() *RadioButton {
+func (gui *Gui) newRadioButton() *RadioButton {
 	result := &RadioButton{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewRadioButton(label string, tip string, callback WidgetCallback, userData interface{}) *RadioButton {
-	result := self.newRadioButton()
+func (gui *Gui) NewRadioButton(label string, tip string, callback WidgetCallback, userData interface{}) *RadioButton {
+	result := gui.newRadioButton()
 	result.initializeRadioButton(0, 0, 0, 0, label, tip, callback, userData)
 	return result
 }
 
-func (self *Gui) NewRadioButtonWithTip(x, y, width, height int, label string, tip string, callback WidgetCallback, userData interface{}) *RadioButton {
-	result := self.newRadioButton()
+func (gui *Gui) NewRadioButtonWithTip(x, y, width, height int, label string, tip string, callback WidgetCallback, userData interface{}) *RadioButton {
+	result := gui.newRadioButton()
 	result.initializeRadioButton(x, y, width, height, label, tip, callback, userData)
 	return result
 }
@@ -1448,14 +1450,14 @@ type Slider struct {
 	data         interface{}
 }
 
-func (self *Gui) newSlider() *Slider {
+func (gui *Gui) newSlider() *Slider {
 	result := &Slider{}
-	self.Register(result)
+	gui.Register(result)
 	return result
 }
 
-func (self *Gui) NewSlider(x, y, w int, min, max float32, label string, tip string) *Slider {
-	result := self.newSlider()
+func (gui *Gui) NewSlider(x, y, w int, min, max float32, label string, tip string) *Slider {
+	result := gui.newSlider()
 	result.initializeSlider(x, y, w, min, max, label, tip)
 	return result
 }
@@ -1490,7 +1492,7 @@ func (self *Slider) Render(iself IWidget) {
 	self.w -= 2
 	self.TextBox.Render(iself)
 	self.w += 2
-	con.Rect(self.x+self.w-2, self.y, 2, 1, true, BKGND_SET)
+	con.Rect(self.x+self.w-2, self.y, 2, 1, true, BkgndSet)
 
 	con.PutCharEx(self.x+self.w-2, self.y, CHAR_ARROW_W, fore, back)
 	con.PutCharEx(self.x+self.w-1, self.y, CHAR_ARROW_E, fore, back)

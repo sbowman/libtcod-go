@@ -1,3 +1,6 @@
+*.hpp
+.DS_Store
+.idea
 *.8
 _cgo_defun.c
 _cgo_gotypes.go

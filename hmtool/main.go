@@ -11,7 +11,7 @@ package main
 import (
 	"container/list"
 	"fmt"
-	"github.com/afolmert/libtcod-go/tcod"
+	"github.com/sbowman/tcod/tcod"
 	"io/ioutil"
 	"math"
 	"os"
@@ -1770,10 +1770,10 @@ func render() {
 				// render the slope map
 				z = tcod.ClampF(0.0, 1.0, hm.GetSlope(x, y)*10.0)
 				val = uint8(z * 255)
-				root.SetCharBackground(x, y, tcod.Color{val, val, val}, tcod.BKGND_SET)
+				root.SetCharBackground(x, y, tcod.Color{val, val, val}, tcod.BkgndSet)
 			} else if greyscale {
 				// render the greyscale heightmap
-				root.SetCharBackground(x, y, tcod.Color{val, val, val}, tcod.BKGND_SET)
+				root.SetCharBackground(x, y, tcod.Color{val, val, val}, tcod.BkgndSet)
 			} else if normal {
 				// render the normal map
 				var n [3]float32
@@ -1781,10 +1781,10 @@ func render() {
 				r := byte((n[0]*0.5 + 0.5) * 255)
 				g := byte((n[1]*0.5 + 0.5) * 255)
 				b := byte((n[2]*0.5 + 0.5) * 255)
-				root.SetCharBackground(x, y, tcod.Color{r, g, b}, tcod.BKGND_SET)
+				root.SetCharBackground(x, y, tcod.Color{r, g, b}, tcod.BkgndSet)
 			} else {
 				// render the colored heightmap
-				root.SetCharBackground(x, y, mapGradient[val], tcod.BKGND_SET)
+				root.SetCharBackground(x, y, mapGradient[val], tcod.BkgndSet)
 			}
 		}
 	}
@@ -1795,15 +1795,15 @@ func render() {
 	landProportion := 100.0 - 100.0*backupMap.CountCells(0.0, sandHeight)/(hm.GetWidth()*hm.GetHeight())
 	landMassLabel.SetValue(fmt.Sprintf("landMass : %d %%%%", int(landProportion)))
 	if !isNormalized {
-		root.PrintEx(HM_WIDTH/2, HM_HEIGHT-1, tcod.BKGND_NONE, tcod.CENTER, "the map is not normalized !")
+		root.PrintEx(HM_WIDTH/2, HM_HEIGHT-1, tcod.BkgndNone, tcod.Center, "the map is not normalized !")
 	}
 	// message
 	msgDelay -= tcod.SysGetLastFrameLength()
 	if msg != "" && msgDelay > 0.0 {
-		h := root.PrintRectEx(HM_WIDTH/2, HM_HEIGHT/2+1, HM_WIDTH/2-2, 0, tcod.BKGND_NONE, tcod.CENTER, msg)
+		h := root.PrintRectEx(HM_WIDTH/2, HM_HEIGHT/2+1, HM_WIDTH/2-2, 0, tcod.BkgndNone, tcod.Center, msg)
 		root.SetDefaultBackground(tcod.COLOR_LIGHT_BLUE)
 		if h > 0 {
-			root.Rect(HM_WIDTH/4, HM_HEIGHT/2, HM_WIDTH/2, h+2, false, tcod.BKGND_SET)
+			root.Rect(HM_WIDTH/4, HM_HEIGHT/2, HM_WIDTH/2, h+2, false, tcod.BkgndSet)
 		}
 		root.SetDefaultBackground(tcod.COLOR_BLACK)
 	}
@@ -2214,7 +2214,7 @@ func main() {
 			(NewAddLevelOperation(-(mapmax - mapmin) / 50)).runInternal()
 		default:
 		}
-		switch key.Vk {
+		switch key.VK {
 		case tcod.K_PRINTSCREEN:
 			tcod.SysSaveScreenshot()
 		default:
